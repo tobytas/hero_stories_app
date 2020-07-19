@@ -4,6 +4,7 @@
   <aside class="col-md-4">
     <section class="user_info">
       <h1>
+        <%= cl_image_tag(@user.image_id, width: 100, height: 100) %>
         <%= @user.name %>
       </h1>
     </section>

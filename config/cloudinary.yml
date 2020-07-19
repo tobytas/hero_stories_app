@@ -1,0 +1,18 @@
+development:
+  cloud_name: div9qgkrv
+  api_key: '147972715481575'
+  api_secret: DPpt8TVbqP4vmRwqdA8KwuKvX3w
+  enhance_image_tag: true
+  static_file_support: false
+production:
+  cloud_name: div9qgkrv
+  api_key: '147972715481575'
+  api_secret: DPpt8TVbqP4vmRwqdA8KwuKvX3w
+  enhance_image_tag: true
+  static_file_support: true
+test:
+  cloud_name: div9qgkrv
+  api_key: '147972715481575'
+  api_secret: DPpt8TVbqP4vmRwqdA8KwuKvX3w
+  enhance_image_tag: true
+  static_file_support: false

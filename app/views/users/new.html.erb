@@ -1,10 +1,28 @@
 <% provide(:title, 'Sign up') %>
 <h1>Sign up</h1>
 
+<div class="preview">
+  <%= image_tag 'placeholder.jpg', class: 'preview', style: 'display: block; margin-left: auto; margin-right: auto' %>
+</div>
+
+<!--<button id="upload_widget" class="cloudinary-button" style="display: block; margin-left: auto; margin-right: auto">-->
+<!--  Upload files-->
+<!--</button>-->
+
+<button id="upload_widget" type="button" class="btn btn-primary" style="display: block; margin-left: auto; margin-right: auto">
+  Primary
+</button>
+
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     <%= form_for(@user) do |f| %>
       <%= render 'shared/error_messages' %>
+
+<!--      <div style="display: none;">-->
+      <%#= cl_image_upload_tag(:image_id) %>
+<!--      </div>-->
+
+<!--      <h2>Drag image here</h2>-->
 
       <%= f.label :name %>
       <%= f.text_field :name, class: 'form-control' %>
@@ -18,7 +36,58 @@
       <%= f.label :password_confirmation, "Confirmation" %>
       <%= f.password_field :password_confirmation, class: 'form-control' %>
 
+      <%= f.hidden_field :image_id %>
+
       <%= f.submit "Create my account", class: "btn btn-primary" %>
     <% end %>
   </div>
+
+  <!--Direct uploading from the browser:-->
+  <!--https://cloudinary.com/documentation/rails_image_and_video_upload#direct_uploading_environment_setup-->
+  <%#= cloudinary_js_config %>
+<!--  <script type="text/javascript">-->
+<!--      $(function() {-->
+<!--          if ($.fn.cloudinary_fileupload !== undefined) {-->
+<!--              $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload({});-->
+<!--          }-->
+
+<!--          // https://cloudinary.com/documentation/rails_image_and_video_upload#additional_jquery_library_features-->
+<!--          $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {-->
+<!--              $('.preview').html(-->
+<!--                  $.cloudinary.image(data.result.public_id,-->
+<!--                      { format: data.result.format, version: data.result.version,-->
+<!--                          crop: 'thumb', width: 100, height: 100,-->
+<!--                          style: 'display: block; margin-left: auto; margin-right: auto' })-->
+<!--              );-->
+<!--              $('#user_avatar_url').val(data.result.url);-->
+<!--              return true;-->
+<!--          });-->
+<!--      });-->
+<!--  </script>-->
+
+<!--  https://cloudinary.com/documentation/upload_widget#quick_example-->
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+
+  <script type="text/javascript">
+      document.getElementById("upload_widget").addEventListener("click", function() {
+          const myWidget = cloudinary.createUploadWidget({
+                  cloudName: 'div9qgkrv',
+                  uploadPreset: 'ml_default'
+              }, function(error, result) {
+                  if (!error && result && result.event === "success") {
+                      // Set a value to field
+                      $('#user_image_id').val(result.info.url);
+                      // Set image preview
+                      $('.preview').html(
+                          $.cloudinary.image(result.info.public_id,
+                              { format: result.info.format, version: result.info.version,
+                                  crop: 'thumb', width: 100, height: 100,
+                                  style: 'display: block; margin-left: auto; margin-right: auto;'})
+                      );
+                  }
+              }
+          );
+          myWidget.open();
+      }, false);
+  </script>
 </div>
