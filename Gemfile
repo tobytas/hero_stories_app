@@ -14,6 +14,9 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'cloudinary'
 gem 'pg'
+gem 'faker'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
