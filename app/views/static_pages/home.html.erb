@@ -9,11 +9,16 @@
 
   <% end %>
 
-  <h2>Search results</h2>
-  <% @search_results.each do |result| %>
-
-    <div><%= result.content.html_safe %></div>
-
-    <hr>
+  <% if @search %>
+    <h2>Search results</h2>
+  <% else %>
+    <h2>Recently updated</h2>
   <% end %>
+    <% @stories_bundle.each do |result| %>
+      <%= link_to result.story.title+ ' chapter'
+          + result.number.to_s+ ' ' + result.updated_at.to_s.split(' ')[0] %>
+<!--      Get first 80 words-->
+     <div><%=  result.content.split[0..80].join(' ') + '..'.html_safe %></div>
+      <hr>
+    <% end %>
 </div>

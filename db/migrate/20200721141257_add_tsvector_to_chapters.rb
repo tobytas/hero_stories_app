@@ -1,5 +1,8 @@
 class AddTsvectorToChapters < ActiveRecord::Migration[6.0]
 
+  # https://postgrespro.ru/docs/postgrespro/9.5/textsearch-tables#textsearch-tables-search
+  # https://thoughtbot.com/blog/optimizing-full-text-search-with-postgres-tsvector-columns-and-triggers
+  # https://postgrespro.ru/docs/postgrespro/9.5/textsearch-features#textsearch-update-triggers
   def up
     add_column :chapters, :tsv, :tsvector
     add_index :chapters, :tsv, using: 'gin'
@@ -7,7 +10,9 @@ class AddTsvectorToChapters < ActiveRecord::Migration[6.0]
     execute <<-SQL
       CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
       ON chapters FOR EACH ROW EXECUTE PROCEDURE
-      tsvector_update_trigger(tsv, 'pg_catalog.english', description);
+      tsvector_update_trigger(
+        tsv, 'pg_catalog.english', content
+      );
     SQL
 
     now = Time.current.to_s(:db)
