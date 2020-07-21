@@ -1,3 +1,19 @@
 <div class="center jumbotron">
   <h2>Welcome to the Hero Stories App</h2>
+
+  <%= form_tag home_path, method: :get, role: 'search' do %>
+
+    <%= text_field_tag :query, params[:query] %>
+
+    <%= submit_tag 'Search', name: nil %>
+
+  <% end %>
+
+  <h2>Search results</h2>
+  <% @search_results.each do |result| %>
+
+    <div><%= result.content.html_safe %></div>
+
+    <hr>
+  <% end %>
 </div>
