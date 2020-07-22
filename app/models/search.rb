@@ -6,7 +6,7 @@ class Search < ApplicationRecord
 
   def results(query)
     if query
-      self.class.search(query).preload(:searchable).map(&:searchable).uniq
+      self.class.search(query).preload(:searchable).map(&:searchable)
     else
       Search.none
     end

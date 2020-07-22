@@ -3,13 +3,10 @@ class StaticPagesController < ApplicationController
   def home
     if params[:query].present?
       @search = true
-      @stories_bundle = Search.new.results(params[:query]).map()
-
-      @stories_bundle.each_with_index do |e, i|
-        if e.class == Story
-          @stories_bundle[i] = Chapter.where(story_id: e.id).take
-        end
+      @stories_bundle = Search.new.results(params[:query]).map do |e|
+        e.class == Story ? Chapter.where(story_id: e.id).take : e
       end
+      @stories_bundle.uniq!
     else
       @stories_bundle = Chapter.order(updated_at: :desc).take(3)
     end
