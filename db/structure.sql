@@ -35,8 +35,7 @@ CREATE TABLE public.chapters (
     number integer,
     content text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    tsv tsvector
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -67,6 +66,7 @@ CREATE TABLE public.comments (
     id bigint NOT NULL,
     user_id bigint,
     chapter_id bigint,
+    body text,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
@@ -113,6 +113,33 @@ CREATE TABLE public.stories (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: searches; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.searches AS
+ SELECT stories.id AS searchable_id,
+    'Story'::text AS searchable_type,
+    stories.title AS term
+   FROM public.stories
+UNION
+ SELECT stories.id AS searchable_id,
+    'Story'::text AS searchable_type,
+    stories.description AS term
+   FROM public.stories
+UNION
+ SELECT chapters.id AS searchable_id,
+    'Chapter'::text AS searchable_type,
+    chapters.content AS term
+   FROM public.chapters
+UNION
+ SELECT chapters.id AS searchable_id,
+    'Chapter'::text AS searchable_type,
+    comments.body AS term
+   FROM (public.chapters
+     JOIN public.comments ON ((chapters.id = comments.chapter_id)));
 
 
 --
@@ -249,6 +276,13 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_chapters_on_content; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chapters_on_content ON public.chapters USING gin (to_tsvector('english'::regconfig, content));
+
+
+--
 -- Name: index_chapters_on_story_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -256,10 +290,10 @@ CREATE INDEX index_chapters_on_story_id ON public.chapters USING btree (story_id
 
 
 --
--- Name: index_chapters_on_tsv; Type: INDEX; Schema: public; Owner: -
+-- Name: index_comments_on_body; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_chapters_on_tsv ON public.chapters USING gin (tsv);
+CREATE INDEX index_comments_on_body ON public.comments USING gin (to_tsvector('english'::regconfig, body));
 
 
 --
@@ -284,6 +318,20 @@ CREATE UNIQUE INDEX index_comments_on_user_id_and_chapter_id ON public.comments 
 
 
 --
+-- Name: index_stories_on_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stories_on_description ON public.stories USING gin (to_tsvector('english'::regconfig, description));
+
+
+--
+-- Name: index_stories_on_title; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stories_on_title ON public.stories USING gin (to_tsvector('english'::regconfig, (title)::text));
+
+
+--
 -- Name: index_stories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -295,13 +343,6 @@ CREATE INDEX index_stories_on_user_id ON public.stories USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
-
-
---
--- Name: chapters tsvectorupdate; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE ON public.chapters FOR EACH ROW EXECUTE FUNCTION tsvector_update_trigger('tsv', 'pg_catalog.english', 'content');
 
 
 --
@@ -317,6 +358,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200721101837'),
 ('20200721101916'),
 ('20200721131348'),
-('20200721141257');
+('20200722072145');
 
 

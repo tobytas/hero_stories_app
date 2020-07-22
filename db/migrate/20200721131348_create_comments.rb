@@ -4,6 +4,7 @@ class CreateComments < ActiveRecord::Migration[6.0]
     create_table :comments do |t|
       t.belongs_to :user
       t.belongs_to :chapter
+      t.text       :body
 
       t.timestamps
     end
