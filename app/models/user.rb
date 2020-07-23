@@ -1,6 +1,6 @@
 class User < ApplicationRecord
 
-  attr_accessor :activation_token
+  attr_reader   :activation_token
   has_many      :stories
   has_many      :comments
 
@@ -33,10 +33,16 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64
   end
 
+  # Returns true if the given token matches the digest
+  def authenticated?(token)
+    return false if @activation_digest.nil?
+    BCrypt::Password.new(@activation_digest).is_password?(token)
+  end
+
   private
     # Creates and assigns token and digest for activation
     def create_activation_digest
-      self.activation_token  = User.new_token
-      self.activation_digest = User.digest(activation_token)
+      @activation_token  = User.new_token
+      @activation_digest = User.digest(activation_token)
     end
 end
