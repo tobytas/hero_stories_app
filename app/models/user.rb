@@ -1,11 +1,12 @@
 class User < ApplicationRecord
 
-  attr_reader   :activation_token
+  attr_accessor :activation_token
+
   has_many      :stories
   has_many      :comments
 
-  before_save   { self.email = email.downcase }
-  before_create :create_activation_digest
+  before_save   :email_to_downcase, :create_activation_digest
+  before_create :email_to_downcase, :create_activation_digest
 
   VALID_EMAIL_REGEX = /\A[\w.+-]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i.freeze
   private_constant :VALID_EMAIL_REGEX
@@ -35,14 +36,19 @@ class User < ApplicationRecord
 
   # Returns true if the given token matches the digest
   def authenticated?(token)
-    return false if @activation_digest.nil?
-    BCrypt::Password.new(@activation_digest).is_password?(token)
+    return false if activation_digest.nil?
+    BCrypt::Password.new(activation_digest).is_password?(token)
   end
 
   private
+    # Sets email to downcase
+    def email_to_downcase
+      self.email = email.downcase
+    end
+
     # Creates and assigns token and digest for activation
     def create_activation_digest
-      @activation_token  = User.new_token
-      @activation_digest = User.digest(activation_token)
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
     end
 end
