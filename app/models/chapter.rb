@@ -1,5 +1,9 @@
 class Chapter < ApplicationRecord
 
-  has_many   :comments
-  belongs_to :story
+  attr_accessor :out
+
+  has_many      :comments, dependent: :destroy
+  belongs_to    :story
+
+  validates     :content, presence: true
 end

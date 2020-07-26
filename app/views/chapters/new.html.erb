@@ -1,0 +1,32 @@
+<% provide(:title, chapter_number) %>
+<h1><%= chapter_number %></h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@chapter) do |f| %>
+      <%= render 'shared/error_messages', object: @chapter %>
+
+      <%= f.label :content %>
+      <%= f.text_area :content, class: 'form-control' %>
+
+      <%= f.text_field :out, value: 0 %>
+    <% end %>
+
+    <div style="margin: auto; width: 42%;">
+      <%= button_tag "Save & Exit", class: "btn btn-primary", id: 'save' %>
+      <%= button_tag "Next chapter", class: "btn btn-primary", id: 'next' %>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#save').bind('click', function () {
+      $('#chapter_out').val(1);
+      $('.new_chapter').submit();
+  });
+
+  $('#next').bind('click', function () {
+      $('.new_chapter').submit();
+  });
+</script>

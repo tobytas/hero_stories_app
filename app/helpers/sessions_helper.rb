@@ -27,4 +27,17 @@ module SessionsHelper
     session.delete(:user_id)
     @current_user = nil
   end
+
+  def clear_story_info
+    if session[:story_id].present? && session[:chapt_num].present?
+      if session[:chapt_num] == 0
+        if controller_name != 'stories' && controller_name != 'chapters'
+          Story.where(id: session[:story_id]).take.destroy
+          session.delete(:story_id)
+          session.delete(:chapt_num)
+          flash.now[:warning] = 'Title deleted'
+        end
+      end
+    end
+  end
 end

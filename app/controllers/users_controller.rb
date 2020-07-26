@@ -26,6 +26,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @stories = @user.stories.paginate(page: params[:page])
   end
 
   def edit
@@ -55,14 +56,6 @@ class UsersController < ApplicationController
     end
 
     # Prefilters
-
-    # Confirms user login
-    def logged_in_user
-      unless logged_in?
-        flash[:danger] = 'Please log in'
-        redirect_to signin_path
-      end
-    end
 
     # Confirms the correct user
     def correct_user

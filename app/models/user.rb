@@ -2,8 +2,8 @@ class User < ApplicationRecord
 
   attr_accessor :activation_token
 
-  has_many      :stories
-  has_many      :comments
+  has_many      :stories,  dependent: :destroy
+  has_many      :comments, dependent: :destroy
 
   before_save   :email_to_downcase, :create_activation_digest
   before_create :email_to_downcase, :create_activation_digest

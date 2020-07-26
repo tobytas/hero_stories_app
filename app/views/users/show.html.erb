@@ -1,12 +1,36 @@
 <% provide(:title, @user.name) %>
 
-<div class="row">
+<div class="row" xmlns="http://www.w3.org/1999/html">
   <aside class="col-md-4">
     <section class="user_info">
       <h1>
         <%= cl_image_tag(@user.image_id, width: 100, height: 100) %>
         <%= @user.name %>
+        <br>
+        <small><%= link_to 'add story', new_story_path %></small>
       </h1>
     </section>
   </aside>
+
+  <div class="col-md-8">
+    <% if @user.stories.any? %>
+      <h3>Stories: <%= @user.stories.count %></h3>
+      <ol class="stories">
+        <% @stories.each do |story| %>
+          <li id="story-<%= story.id %>">
+            <span class="user"><%= link_to story.user.name, story.user %></span>
+            <span class="title"><%= link_to story.title, story_path(story) %></span>
+            <span class="timestamp">Posted <%= time_ago_in_words(story.created_at) %> ago.
+
+              <% if current_user?(story.user) %>
+                <%= link_to 'delete', story, method: :delete, data: { confirm: 'You sure?' } %>
+              <% end %>
+
+            </span>
+          </li>
+        <% end %>
+      </ol>
+      <%= will_paginate @stories %>
+    <% end %>
+  </div>
 </div>

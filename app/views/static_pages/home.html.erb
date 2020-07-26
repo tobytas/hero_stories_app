@@ -2,11 +2,9 @@
   <h2>Welcome to the Hero Stories App</h2>
 
   <%= form_tag home_path, method: :get, role: 'search' do %>
-
     <%= text_field_tag :query, params[:query] %>
 
     <%= submit_tag 'Search', name: nil %>
-
   <% end %>
 
   <% if @search %>

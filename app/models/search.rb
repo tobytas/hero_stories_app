@@ -1,5 +1,6 @@
 class Search < ApplicationRecord
 
+  # https://thoughtbot.com/blog/implementing-multi-table-full-text-search-with-postgres#ruby
   extend Textacular
 
   belongs_to :searchable, polymorphic: true
