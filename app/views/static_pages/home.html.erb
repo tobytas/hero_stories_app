@@ -13,10 +13,10 @@
     <h2>Recently updated</h2>
   <% end %>
     <% @stories_bundle.each do |result| %>
-      <%= "%s | chapter_%s | %s" %[
-          result.story.title,
-          result.number.to_s,
-          result.updated_at.to_s.split(' ')[0]] %>
+
+      <span class="title"><%= link_to result.story.title, story_path(result.story) %></span> |
+      <span class="chapter"><%= link_to "chapter_" + result.number.to_s, chapter_path(result) %></span> |
+      <span class="timestamp"><%= result.updated_at.to_s.split(' ')[0] %></span>
 
       <br>
       <div><%= result.content.split[0..80].join(' ') + '..' %></div>

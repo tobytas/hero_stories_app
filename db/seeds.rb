@@ -9,6 +9,7 @@
 toby =
 User.create!(name:                  'toby',
              email:                 'toby@gmail.com',
+             image_id:              'https://res.cloudinary.com/div9qgkrv/image/upload/v1595836446/953-536x354_qk4rww.jpg',
              password:              'password',
              password_confirmation: 'password',
              admin:                 true,
@@ -18,6 +19,7 @@ User.create!(name:                  'toby',
 coby =
 User.create!(name:                  'coby',
              email:                 'coby@gmail.com',
+             image_id:              'https://res.cloudinary.com/div9qgkrv/image/upload/v1595244590/200_pvbyku.jpg',
              password:              'password',
              password_confirmation: 'password',
              admin:                 true,

@@ -2,7 +2,7 @@ class AccountActivationsController < ApplicationController
 
   def edit
     user = User.where(email: params[:email]).take
-    # byebug
+    byebug
     if user && !user.activated? && user.authenticated?(params[:id])
       user.update_attribute(:activated, true)
       user.update_attribute(:activated_at, Time.zone.now)

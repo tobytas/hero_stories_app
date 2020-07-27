@@ -19,5 +19,6 @@ Rails.application.routes.draw do
   resources :account_activations, only: [:edit]
   resources :stories
   resources :chapters
+  resources :comments,            only: [:create]
 
 end

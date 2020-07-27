@@ -24,6 +24,12 @@ class ChaptersController < ApplicationController
     end
   end
 
+  def show
+    @chapter = Chapter.find(params[:id])
+    # redirect_to story_path(@chapter.story), page: @chapter.number
+    redirect_to controller: 'stories', action: 'show', id: @chapter.story_id, page: @chapter.number
+  end
+
   private
     def chapter_params
       params.require(:chapter).permit(:content, :out)
